@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { RiSearchLine } from "react-icons/ri";
 import { IoCheckboxOutline } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
+import { CreateTask } from "./api";
+import { notify } from "./utils";
 const TaskManager = () => {
+  const [input, setInput] = useState("");
+  const handleInputValue = async () => {
+    const obj = {
+      taskName: input,
+      idDone: false,
+    };
+    try {
+      const { success, message } = await CreateTask(obj);
+      if (success) {
+        notify(message, "success");
+      } else {
+        notify(message, "error");
+      }
+      
+    } catch (err) {
+      console.log(err);
+      notify( "failed to create error", "error");
+    }
+  };
+
   return (
     <div className="d-flex w-50 m-auto flex-column mt-5 align-items-center">
       <h1 className="mb-4">Task Manager</h1>
@@ -14,10 +36,16 @@ const TaskManager = () => {
         <div className="input-group flex-grow-1 me-2">
           <input
             type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Add a New Task"
             className="form-control me-1"
           />
-          <button className="btn btn-success btn-sm me-2">
+
+          <button
+            onClick={handleInputValue}
+            className="btn btn-success btn-sm me-2"
+          >
             <FiPlus className="me-2" />
           </button>
         </div>
@@ -51,13 +79,12 @@ const TaskManager = () => {
       </div>
 
       {/* toastify */}
-     
-        <ToastContainer
+
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
-         />
-      
+      />
     </div>
   );
 };

@@ -70,10 +70,10 @@ const updateTaskById = async (req, res) => {
 };
 
 const deleteTaskById = async (req, res) => {
-  const id = req.params.id; // Extract the task ID from the URL parameters
+  const id = req.params.id; 
 
   try {
-    const deletedTask = await TaskModel.findByIdAndDelete(id); // Find and delete the task by ID
+    const deletedTask = await TaskModel.findByIdAndDelete(id); 
 
     if (!deletedTask) {
       return res
